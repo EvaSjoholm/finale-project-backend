@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 
 const { Schema } = mongoose;
 
-// Workout Quiz Question Schema
+// QUIZ STRUCTURE 
 const QuestionSchema = new mongoose.Schema({
   questionText: {
     type: String,
@@ -47,7 +47,7 @@ const QuestionSchema = new mongoose.Schema({
   },
 });
 
-// Workout Quiz Schema
+// OVERALL QUIZ STRUCTURE 
 const QuizSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -60,10 +60,6 @@ const QuizSchema = new mongoose.Schema({
   questions: {
     type: [QuestionSchema],
     required: true,
-  },
-  timeLimit: {
-    type: Number,
-    default: 0,
   },
   category: {
     type: String,
@@ -79,11 +75,13 @@ const QuizSchema = new mongoose.Schema({
   },
 });
 
-
-
 const Quiz = mongoose.model("Quiz", QuizSchema);
 
-
+app.get("/members", (req, res) => {
+  res.json([
+    { title: "title", level: "beginner"}
+  ])
+})
 
 // FOR THE USER 
 const UserSchema = new mongoose.Schema({
