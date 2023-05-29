@@ -4,10 +4,9 @@ import mongoose from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://127.0.0.1/project-auth";
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
-
 
 
 // Defines the port the app will run on. Defaults to 8080, but can be overridden
@@ -25,7 +24,30 @@ app.get("/", (req, res) => {
   res.send("Hello Technigo!");
 });
 
+
 const { Schema } = mongoose;
+
+// WORKOUT QUIZ
+const QuizSchema = new mongoose.Schema({
+  descirption: {
+  name: String,
+  id: Number,
+  title: String,
+  level: String,
+}, 
+questions: {
+  type: String,
+  questionsText: String,
+  userIndex: Number,
+  answerIndex: Number
+
+}});
+
+const Quiz = mongoose.model("Quiz", QuizSchema);
+
+
+
+// SIGN IN - BECOME A MEMBER 
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -103,7 +125,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-const SecretSchema = new mongoose.Schema({
+const MemberSchema = new mongoose.Schema({
   message: {
     type: String,
     required: true,
@@ -120,7 +142,7 @@ const SecretSchema = new mongoose.Schema({
   }
 });
 
-const Secret = mongoose.model("Secrets", SecretSchema);
+const Member = mongoose.model("Members", MemberSchema);
 
 // Authenticate the user
 const authenticateUser = async (req, res, next) => {
@@ -144,17 +166,17 @@ const authenticateUser = async (req, res, next) => {
   }
 }
 
-app.get("/secrets", authenticateUser);
-app.get("/secrets", async (req, res) => {
+app.get("/members", authenticateUser);
+app.get("/members", async (req, res) => {
   try {
     const accessToken = req.header("Authorization");
     const user = await User.findOne({ accessToken: accessToken })
 
     if (user) {
-      const secrets = await Secret.find({ username: user._id }).sort({ createdAt: -1 }).limit(20)
+      const member = await Member.find({ username: user._id }).sort({ createdAt: -1 }).limit(20)
       res.status(200).json({
         success: true,
-        response: secrets,
+        response: member,
       });
     } else {
       res.status(401).json({
@@ -173,47 +195,27 @@ app.get("/secrets", async (req, res) => {
 });
 
 
-/*
-app.get("/secrets", authenticateUser);
-app.get("/secrets", async(req, res) => {
-  try {
-    const accessToken = req.header("Authorization");
-    const secrets = await Secret.find({});
-    res.status(200).json({
-      success: true, 
-      response: secrets
-    })
-  } catch (e) {
-    res.status(500).json({
-      success: false, 
-      response: e, 
-      message: "Ground control... Abort Abort!"
-    });
-  }
-});
-*/
 
-app.post("/secrets", authenticateUser);
-app.post("/secrets", async (req, res) => {
+app.post("/members", authenticateUser);
+app.post("/members", async (req, res) => {
   try {
     const { message } = req.body;
     const accessToken = req.header("Authorization");
     const user = await User.findOne({accessToken: accessToken});
-    const secrets = await new Secret({
+    const member = await new Member({
       message: message, 
       username: user._id
-      // username: username
-      // username: username._id
+      
     }).save();
     res.status(201).json({
       success: true, 
-      response: secrets
+      response: member
     })
   } catch (e) {
     res.status(500).json({
       success: false, 
       response: e, 
-      message: "nope get out"
+      message: "Not a workouter yet!"
     });
   }
 })
