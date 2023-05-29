@@ -79,9 +79,17 @@ const Quiz = mongoose.model("Quiz", QuizSchema);
 
 app.get("/members", (req, res) => {
   res.json([
-    { title: "title", level: "beginner"}
+    { 
+      title: "title", 
+      level: "beginner",
+      questions: [],
+      category: [],
+      difficulty: [],
+    }
   ])
 })
+
+
 
 // FOR THE USER 
 const UserSchema = new mongoose.Schema({
