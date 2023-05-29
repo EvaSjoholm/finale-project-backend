@@ -27,27 +27,65 @@ app.get("/", (req, res) => {
 
 const { Schema } = mongoose;
 
-// WORKOUT QUIZ
-const QuizSchema = new mongoose.Schema({
-  descirption: {
-  name: String,
-  id: Number,
-  title: String,
-  level: String,
-}, 
-questions: {
-  type: String,
-  questionsText: String,
-  userIndex: Number,
-  answerIndex: Number
+// Workout Quiz Question Schema
+const QuestionSchema = new mongoose.Schema({
+  questionText: {
+    type: String,
+    required: true,
+  },
+  options: {
+    type: [String],
+    required: true,
+  },
+  correctAnswerIndex: {
+    type: Number,
+    required: true,
+  },
+  userResponseIndex: {
+    type: Number,
+    default: null,
+  },
+});
 
-}});
+// Workout Quiz Schema
+const QuizSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  level: {
+    type: String,
+    required: true,
+  },
+  questions: {
+    type: [QuestionSchema],
+    required: true,
+  },
+  timeLimit: {
+    type: Number,
+    default: 0,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
+  difficulty: {
+    type: String,
+    required: true,
+  },
+  explanation: {
+    type: String,
+    default: '',
+  },
+});
+
+
 
 const Quiz = mongoose.model("Quiz", QuizSchema);
 
 
 
-// SIGN IN - BECOME A MEMBER 
+// FOR THE USER 
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -68,6 +106,8 @@ const UserSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("User", UserSchema);
+
+
 
 // CREATE REGISTRATION
 app.post("/register", async (req, res) => {
@@ -96,7 +136,7 @@ res.status(201).json({
   }
 });
 
-//LOGIN
+//LOGIN FOR USER IF BECOMING A MEMBER 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -125,6 +165,8 @@ app.post("/login", async (req, res) => {
   }
 });
 
+
+// WHEN USER BECOMES A WORKOUT MEMBER 
 const MemberSchema = new mongoose.Schema({
   message: {
     type: String,
@@ -142,9 +184,11 @@ const MemberSchema = new mongoose.Schema({
   }
 });
 
+
+
 const Member = mongoose.model("Members", MemberSchema);
 
-// Authenticate the user
+// AUTHENTICATE THE MEMBER/USER 
 const authenticateUser = async (req, res, next) => {
   const accessToken = req.header("Authorization");
   try {
