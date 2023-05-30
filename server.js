@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 
-// QUIZ STRUCTURE 
+// QUUESTION STRUCTURE 
 const QuestionSchema = new mongoose.Schema({
   questionText: {
     type: String,
