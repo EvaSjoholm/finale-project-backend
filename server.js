@@ -18,14 +18,13 @@ const app = express();
 // Add middlewares to enable cors and json body parsing
 app.use(cors());
 app.use(express.json());
+const listEndpoints = require('express-list-endpoints');
 
 // Start defining your routes here
 app.get("/", (req, res) => {
-  res.send("Hello Technigo!");
+  res.json(listEndpoints(app));
 });
 
-
-const { Schema } = mongoose;
 
 // QUIZ STRUCTURE 
 const QuestionSchema = new mongoose.Schema({
@@ -77,17 +76,15 @@ const QuizSchema = new mongoose.Schema({
 
 const Quiz = mongoose.model("Quiz", QuizSchema);
 
-app.get("/members", (req, res) => {
-  res.json([
-    { 
-      title: "title", 
-      level: "beginner",
-      questions: [],
-      category: [],
-      difficulty: [],
-    }
-  ])
-})
+app.get("/quizzes", async (req, res) => {
+  try {
+    const quizzes = await Quiz.find();
+    res.json(quizzes);
+  } catch (error) {
+    console.error("Error retrieving quizzes:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 
@@ -115,7 +112,7 @@ const User = mongoose.model("User", UserSchema);
 
 
 
-// CREATE REGISTRATION
+// REGISTER USER AND LOGIN REQUESTS FOR SIGN UP
 app.post("/register", async (req, res) => {
   const {username, password} = req.body;
 
