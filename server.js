@@ -18,11 +18,10 @@ const app = express();
 // Add middlewares to enable cors and json body parsing
 app.use(cors());
 app.use(express.json());
-const listEndpoints = require('express-list-endpoints');
 
 // Start defining your routes here
 app.get("/", (req, res) => {
-  res.json(listEndpoints(app));
+  res.send("Hello Moto");
 });
 
 
@@ -34,17 +33,21 @@ const QuestionSchema = new mongoose.Schema({
   },
   options: {
     type: [String],
-    required: true,
-  },
-  correctAnswerIndex: {
-    type: Number,
-    required: true,
-  },
-  userResponseIndex: {
-    type: Number,
-    default: null,
-  },
+    required: true
+  }
 });
+
+// ANSWER SCHEMA - not sure how to go about this part 
+const OptionSchema = new mongoose.Schema ({
+  text: {
+    type: String,
+    require: true
+  },
+  isCorrect: {
+    type: Boolean,
+    require: true
+  }
+})
 
 // OVERALL QUIZ STRUCTURE 
 const QuizSchema = new mongoose.Schema({
@@ -75,7 +78,6 @@ const QuizSchema = new mongoose.Schema({
 });
 
 const Quiz = mongoose.model("Quiz", QuizSchema);
-
 app.get("/quizzes", async (req, res) => {
   try {
     const quizzes = await Quiz.find();
