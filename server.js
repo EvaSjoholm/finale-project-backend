@@ -88,6 +88,23 @@ app.get("/quizzes", async (req, res) => {
   }
 });
 
+app.post("/quizzes", async (req, res) => {
+  const {QuizSchema} = req.body;
+  try {
+    const userAnswer = await userAnswer.save();
+    res.status(201).json({
+      success: true,
+      response: userAnswer,
+      message: "Created successfully"
+    });
+  } catch (e) {
+    res.status(400).json({
+      success: false,
+      response: e,
+      message: "Could not save"
+    });
+  }
+});
 
 
 // FOR THE USER 
@@ -113,8 +130,7 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 
 
-
-// REGISTER USER AND LOGIN REQUESTS FOR SIGN UP
+// REGISTER NEW USER FOR SIGN UP
 app.post("/register", async (req, res) => {
   const {username, password} = req.body;
 
@@ -141,34 +157,34 @@ res.status(201).json({
   }
 });
 
-//LOGIN FOR USER IF BECOMING A MEMBER 
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const user = await User.findOne({username: username})
-    if (user && bcrypt.compareSync(password, user.password)) {
-      res.status(200).json({
-        success: true,
-        response: {
-          username: user.username,
-          id: user._id,
-          accessToken: user.accessToken,
-          message: "Login successful"
-        }
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        response: "Credentials do not match"
-      });
-    }
-  } catch (e) {
-    res.status(500).json({
-      success: false,
-      response: e
-    });
-  }
-});
+// //LOGIN FOR USER IF BECOMING A MEMBER 
+// app.post("/login", async (req, res) => {
+//   const { username, password } = req.body;
+//   try {
+//     const user = await User.findOne({username: username})
+//     if (user && bcrypt.compareSync(password, user.password)) {
+//       res.status(200).json({
+//         success: true,
+//         response: {
+//           username: user.username,
+//           id: user._id,
+//           accessToken: user.accessToken,
+//           message: "Login successful"
+//         }
+//       });
+//     } else {
+//       res.status(400).json({
+//         success: false,
+//         response: "Credentials do not match"
+//       });
+//     }
+//   } catch (e) {
+//     res.status(500).json({
+//       success: false,
+//       response: e
+//     });
+//   }
+// });
 
 
 // WHEN USER BECOMES A WORKOUT MEMBER 
