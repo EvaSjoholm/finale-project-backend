@@ -37,17 +37,6 @@ const QuestionSchema = new mongoose.Schema({
   }
 });
 
-// // ANSWER SCHEMA - not sure how to go about this part 
-// const OptionSchema = new mongoose.Schema ({
-//   text: {
-//     type: String,
-//     require: true
-//   },
-//   isCorrect: {
-//     type: Boolean,
-//     require: true
-//   }
-// })
 
 // OVERALL QUIZ STRUCTURE 
 const QuizSchema = new mongoose.Schema({
