@@ -37,17 +37,17 @@ const QuestionSchema = new mongoose.Schema({
   }
 });
 
-// ANSWER SCHEMA - not sure how to go about this part 
-const OptionSchema = new mongoose.Schema ({
-  text: {
-    type: String,
-    require: true
-  },
-  isCorrect: {
-    type: Boolean,
-    require: true
-  }
-})
+// // ANSWER SCHEMA - not sure how to go about this part 
+// const OptionSchema = new mongoose.Schema ({
+//   text: {
+//     type: String,
+//     require: true
+//   },
+//   isCorrect: {
+//     type: Boolean,
+//     require: true
+//   }
+// })
 
 // OVERALL QUIZ STRUCTURE 
 const QuizSchema = new mongoose.Schema({
@@ -62,19 +62,7 @@ const QuizSchema = new mongoose.Schema({
   questions: {
     type: [QuestionSchema],
     required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  difficulty: {
-    type: String,
-    required: true,
-  },
-  explanation: {
-    type: String,
-    default: '',
-  },
+  }
 });
 
 const Quiz = mongoose.model("Quiz", QuizSchema);
@@ -89,12 +77,11 @@ app.get("/quizzes", async (req, res) => {
 });
 
 app.post("/quizzes", async (req, res) => {
-  const {QuizSchema} = req.body;
   try {
-    const userAnswer = await userAnswer.save();
+  const newQuiz = await new Quiz(req.body).save()
     res.status(201).json({
       success: true,
-      response: userAnswer,
+      response: newQuiz,
       message: "Created successfully"
     });
   } catch (e) {
