@@ -4,4 +4,4 @@
     {"questionText":"What is your favorite type of training?", "options":["Lift Weights","Circuit","At home workout"]},
     {"questionText":"What is your biggest fitness struggle?", "options":["Finding time","Staying consistent","Knowing where to start"]},
     {"questionText":"Which best describes your fitness level?","options":["Beginner","Intermediate","Advance","Pro Athlete"]},
-    {"questionText":"Would you like to get in contact with one of our coaches?","options":["Yes","No","Contact me"]}]}
+    {"questionText":"Would you like to get in contact with one of our coaches?","options":["Yes","No"]}]}
